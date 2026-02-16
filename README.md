@@ -1,5 +1,7 @@
 # jsonrpc
 
+[![Hackage](https://img.shields.io/hackage/v/jsonrpc.svg)](https://hackage.haskell.org/package/jsonrpc)
+
 A lightweight Haskell implementation of
 [JSON-RPC 2.0](https://www.jsonrpc.org/specification) protocol types with
 [Aeson](https://hackage.haskell.org/package/aeson) serialisation.
