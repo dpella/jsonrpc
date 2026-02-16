@@ -174,8 +174,9 @@ data JSONRPCErrorInfo = JSONRPCErrorInfo
     }
     deriving stock (Show, Eq, Generic)
 
--- | Custom 'ToJSON' that maps the Haskell field @errorData@ to the JSON key @\"data\"@
--- as required by the JSON-RPC 2.0 specification.
+{- | Custom 'ToJSON' that maps the Haskell field @errorData@ to the JSON key @\"data\"@
+as required by the JSON-RPC 2.0 specification.
+-}
 instance ToJSON JSONRPCErrorInfo where
     toJSON (JSONRPCErrorInfo c m d) =
         object $
@@ -215,8 +216,9 @@ data JSONRPCRequest = JSONRPCRequest
     deriving stock (Show, Eq, Generic)
     deriving anyclass (ToJSON)
 
--- | Custom 'FromJSON' instance that treats a missing @params@ key as 'Null'.
--- JSON-RPC 2.0 allows the @params@ field to be omitted.
+{- | Custom 'FromJSON' instance that treats a missing @params@ key as 'Null'.
+JSON-RPC 2.0 allows the @params@ field to be omitted.
+-}
 instance FromJSON JSONRPCRequest where
     parseJSON = withObject "JSONRPCRequest" $ \o ->
         JSONRPCRequest
@@ -284,8 +286,9 @@ instance ToJSON JSONRPCNotification where
     toJSON (JSONRPCNotification j m p) =
         object ["jsonrpc" .= j, "method" .= m, "params" .= p]
 
--- | Custom 'FromJSON' instance that treats a missing @params@ key as 'Null'.
--- JSON-RPC 2.0 allows notifications to omit the @params@ field entirely.
+{- | Custom 'FromJSON' instance that treats a missing @params@ key as 'Null'.
+JSON-RPC 2.0 allows notifications to omit the @params@ field entirely.
+-}
 instance FromJSON JSONRPCNotification where
     parseJSON = withObject "JSONRPCNotification" $ \o ->
         JSONRPCNotification
@@ -349,6 +352,7 @@ class
     where
     -- | The type of the @params@ field.
     type RequestParams a
+
     type RequestParams a = RequestParamType (Rep a)
 
     -- | The JSON-RPC method name (e.g. @\"initialize\"@, @\"tools\/list\"@).
@@ -418,6 +422,7 @@ class
     where
     -- | The type of the @params@ field.
     type NotificationParams a
+
     type NotificationParams a = NotificationParamType (Rep a)
 
     -- | The JSON-RPC method name.
