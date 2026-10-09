@@ -75,6 +75,7 @@ module JSONRPC (
 
     -- * Helpers
     EmptyParams,
+    messageId,
 
     -- * Standard JSON-RPC 2.0 error codes
     pARSE_ERROR,
@@ -91,6 +92,7 @@ import Control.Applicative ((<|>))
 import Data.Aeson
 import Data.Aeson qualified as Aeson
 import Data.Data (Proxy (..), Typeable, typeRep)
+import Data.Hashable (Hashable)
 import Data.Kind (Type)
 import Data.Text (Text)
 import GHC.Generics
@@ -106,10 +108,12 @@ import GHC.TypeError (ErrorMessage (..), TypeError)
 The JSON-RPC 2.0 specification requires that each request has a unique
 identifier.  The ID can be a string, number, or null value.  Numbers
 SHOULD NOT contain fractional parts.
+
+The 'Ord' instance supports ordered containers. The order has no protocol meaning.
 -}
 newtype RequestId = RequestId Value
-    deriving stock (Show, Eq)
-    deriving newtype (ToJSON, FromJSON)
+    deriving stock (Show, Eq, Ord)
+    deriving newtype (ToJSON, FromJSON, Hashable)
 
 -- ---------------------------------------------------------------------------
 -- Constants
@@ -306,6 +310,18 @@ data JSONRPCMessage
     | ErrorMessage JSONRPCError
     | NotificationMessage JSONRPCNotification
     deriving stock (Show, Eq, Generic)
+
+{- | Return the ID of a request, response, or error. Return 'Nothing' for a notification.
+
+A request carries its own ID. A response or error carries the ID it answers.
+An explicit null ID returns @Just (RequestId Null)@.
+-}
+messageId :: JSONRPCMessage -> Maybe RequestId
+messageId = \case
+    RequestMessage JSONRPCRequest{id = rid} -> Just rid
+    ResponseMessage JSONRPCResponse{id = rid} -> Just rid
+    ErrorMessage JSONRPCError{id = rid} -> Just rid
+    NotificationMessage _ -> Nothing
 
 instance ToJSON JSONRPCMessage where
     toJSON (RequestMessage r) = toJSON r

@@ -1,14 +1,14 @@
 cabal-version: 2.2
 name: jsonrpc
-version: 0.2.0.0
+version: 0.2.1.0
 license: MPL-2.0
 license-file: LICENSE
 copyright: (c) 2026 DPella AB
 author: DPella AB
 tested-with: ghc ==9.12.2
 extra-doc-files:
-  README.md
   CHANGELOG.md
+  README.md
 
 maintainer:
   matti@dpella.io,
@@ -56,6 +56,7 @@ library
   build-depends:
     aeson >=2.1 && <2.3,
     base >=4.18 && <4.22,
+    hashable >=1.4 && <1.6,
     text >=2.0 && <2.2,
 
 test-suite test-jsonrpc
