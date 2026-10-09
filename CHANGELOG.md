@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1.0
+
+### Added
+- `Ord` and `Hashable` instances for `RequestId` for use as container keys.
+- `messageId` returns the ID of a request, response, or error. It returns
+  `Nothing` for a notification and preserves explicit null IDs.
+
 ## 0.2.0
 
 ### Added
